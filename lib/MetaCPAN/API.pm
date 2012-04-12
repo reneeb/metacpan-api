@@ -69,7 +69,7 @@ sub post {
     ref $query and ref $query eq 'HASH'
         or croak 'Second argument of query hashref must be provided';
 
-    my $query_json = encode_json $query;
+    my $query_json = to_json( $query, { canonical => 1 } );
     my $result     = $self->ua->request(
         'POST',
         "$base/$url",
@@ -118,7 +118,9 @@ sub _build_extra_params {
         or croak 'Incorrect number of params, must be key/value';
 
     my %extra = @_;
-    my $extra = join '&', map { "$_=" . uri_escape($extra{$_}) } keys %extra;
+    my $extra = join '&', map {
+        "$_=" . uri_escape( $extra{$_} )
+    } sort keys %extra;
 
     return $extra;
 }
@@ -129,9 +131,27 @@ __END__
 
 =head1 SYNOPSIS
 
+    # simple usage
     my $mcpan  = MetaCPAN::API->new();
     my $author = $mcpan->author('XSAWYERX');
-    my $dist   = $mcpan->release( distribution => 'MetaCPAN::API' );
+    my $dist   = $mcpan->release( distribution => 'MetaCPAN-API' );
+
+    # advanced usage with cache (contributed by Kent Fredric)
+    require CHI;
+    require WWW::Mechanize::Cached;
+    require HTTP::Tiny::Mech;
+    require MetaCPAN::API;
+
+    my $mcpan = MetaCPAN::API->new(
+      ua => HTTP::Tiny::Mech->new(
+        mechua => WWW::Mechanize::Cached->new(
+          cache => CHI->new(
+            driver => 'File',
+            root_dir => '/tmp/metacpan-cache',
+          ),
+        ),
+      ),
+    );
 
 =head1 DESCRIPTION
 
@@ -251,7 +271,7 @@ It accepts an additional hash as C<GET> parameters.
 =head2 post
 
     # /release&content={"query":{"match_all":{}},"filter":{"prefix":{"archive":"Cache-Cache-1.06"}}}
-    my $result = $mcpan->fetch(
+    my $result = $mcpan->post(
         'release',
         {
             query  => { match_all => {} },

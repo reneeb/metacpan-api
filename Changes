@@ -1,5 +1,27 @@
 Revision history for MetaCPAN-API
 
+0.43        05.04.12
+            * Add example in POD of advanced usage with cache by Kent Fredric.
+              (Gist: https://gist.github.com/1291928)
+            * Sort keys in param join - more predictable result.
+
+0.42        08.01.12
+            * Corrected documentation in MetaCPAN::API::Source.
+            * Updated Dist::Zilla configuration, added more tests.
+
+0.41        07.01.12
+            * Use Test::TinyMocker 0.02 syntax in tests to avoid test fails.
+
+0.40        06.01.12
+            * Fixed JSON encoding so ElasticSearch won't fail.
+              (Christian Walde)
+            * Documentation fixes (Logan - logie17).
+
+0.34        02.10.11
+            * Added MetaCPAN::API::Source (Renee Baecker).
+            * Fix of HTTP::Tiny content-type in options (Renee Baecker).
+            * Typo fix (Olaf Alders, reported by @doherty).
+
 0.33        24.08.11
             * No functional changes.
             * Skip t::lib in dzil.

@@ -34,7 +34,7 @@ sub pod {
         $type =~ m{^ text/ (?: html|plain|x-pod|x-markdown ) $}x
             or croak 'Incorrect content-type provided';
 
-        $extra{headers}->{'content-type'} = $type;
+        $extra{headers}{'content-type'} = $type;
     }
 
     $url = $self->base_url . "/$url";
@@ -59,7 +59,7 @@ and distribution releases.
 
 =head2 pod
 
-    my $result = $mcpan->pod( pod => 'Moose' );
+    my $result = $mcpan->pod( module => 'Moose' );
 
     # or
     my $result = $mcpan->pod(
